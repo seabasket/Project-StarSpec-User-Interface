@@ -6,7 +6,8 @@ from tkinter_webcam import webcam
 import customtkinter as ctk
 from PIL import ImageTk, Image
 import cv2
-import webview
+from cv2 import *
+import picamera
 
 #system appearance
 ctk.set_appearance_mode("System")
@@ -34,11 +35,32 @@ frame2 = ctk.CTkFrame(root)
 frame2.pack(fill="both", expand=1)
 frame2.place(x=0, y=0)
 
-webcam = webcam.Box(frame2, width=1100, height=900)
-webcam.show_frames()
+# Open a connection to the camera
+cap = cv2.VideoCapture(0)
 
-# bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
-# bg_image2.pack(expand=1)
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
+
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+
+    # If frame is read correctly ret is True
+    if not ret:
+        print("Can't receive frame (stream end?). Exiting ...")
+        break
+
+    # Display the resulting frame
+    cv2.imshow('frame', frame)
+
+    # Break the loop on 'q' key press
+    if cv2.waitKey(1) == ord('ESC'):
+        break
+
+# When everything is done, release the capture
+cap.release()
+cv2.destroyAllWindows()
 
 
 #buttons that will switch between pages
@@ -59,6 +81,8 @@ switch2 = ctk.CTkButton(frame2,
                         anchor="nw")
 switch2.pack(expand=1)
 switch2.place(x=10, y=10)
+
+#gain
 
 #exposure time feature
 exposure_time = ctk.CTkEntry(frame1,
@@ -192,6 +216,19 @@ save_image = ctk.CTkButton(frame2,
                 anchor="ne")
 save_image.pack(padx=10, pady=10, anchor="nw", expand=1)
 save_image.place(x=720, y=10)
+
+#live view feature
+def liveView():
+    print("Currently viewing the live feed")
+
+live_view = ctk.CTkButton(frame2,
+                text="Live View", font=("Helvetica", 18), text_color="white",
+                fg_color="black", bg_color="transparent", hover_color="dark grey",
+                command=liveView,
+                height=30, width=80,
+                anchor="ne")
+live_view.pack(padx=10, pady=10, anchor="nw", expand=1)
+live_view.place(x=620, y=10)
 
 frame1.tkraise()
 #Run app

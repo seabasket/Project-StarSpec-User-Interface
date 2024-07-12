@@ -2,12 +2,12 @@ import tkinter
 from tkinter import *
 from tkinter import ttk
 from tkinter import PhotoImage
+from tkinter import filedialog
 from tkinter_webcam import webcam
 import customtkinter as ctk
 from PIL import ImageTk, Image
 import cv2
 from cv2 import *
-import picamera
 
 #system appearance
 ctk.set_appearance_mode("System")
@@ -34,34 +34,21 @@ bg_image1.place(x=0, y=0)
 frame2 = ctk.CTkFrame(root)
 frame2.pack(fill="both", expand=1)
 frame2.place(x=0, y=0)
+bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
+bg_image2.pack(expand=1)
 
-# Open a connection to the camera
-cap = cv2.VideoCapture(0)
+def open_phd2():
+    print("PHD2 is open.")
 
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
-
-while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-
-    # If frame is read correctly ret is True
-    if not ret:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
-
-    # Display the resulting frame
-    cv2.imshow('frame', frame)
-
-    # Break the loop on 'q' key press
-    if cv2.waitKey(1) == ord('ESC'):
-        break
-
-# When everything is done, release the capture
-cap.release()
-cv2.destroyAllWindows()
-
+#PHD2 button
+phd2_button = ctk.CTkButton(frame1,
+                        text="Open PHD2", font=("Helvetica", 18), text_color="white",
+                        command=open_phd2,
+                        fg_color="black", bg_color="transparent", hover_color="dark grey",
+                        width=50,
+                        anchor="nw")
+phd2_button.pack(expand=1)
+phd2_button.place(x=20, y=200)
 
 #buttons that will switch between pages
 switch1 = ctk.CTkButton(frame1,
@@ -71,7 +58,7 @@ switch1 = ctk.CTkButton(frame1,
                         width=50,
                         anchor="nw")
 switch1.pack(expand=1)
-switch1.place(x=10, y=10)
+switch1.place(x=710, y=10)
 
 switch2 = ctk.CTkButton(frame2,
                         text="Main Control", font=("Helvetica", 18), text_color="white",
@@ -80,9 +67,30 @@ switch2 = ctk.CTkButton(frame2,
                         width=50,
                         anchor="nw")
 switch2.pack(expand=1)
-switch2.place(x=10, y=10)
+switch2.place(x=710, y=10)
 
-#gain
+#gain feature
+gain = ctk.CTkEntry(frame1,
+                    font=("Helvetica", 18),
+                    corner_radius=10,
+                    width=65,
+                    bg_color="transparent")
+gain.pack(padx=10, expand=1, anchor="w")
+gain.place(x=55, y=20)
+
+gain_label1 = ctk.CTkLabel(frame1,
+                            text="Gain:",
+                            font=("Helvetica", 18),
+                            bg_color="transparent")
+gain_label1.pack(padx=5, pady=5,expand=1, anchor="w")
+gain_label1.place(x=10, y=20,)
+
+gain_label2 = ctk.CTkLabel(frame1,
+                            text="ms",
+                            font=("Helvetica", 18),
+                            bg_color="transparent")
+gain_label2.pack(padx=5, pady=5,expand=1, anchor="w")
+gain_label2.place(x=125, y=20)
 
 #exposure time feature
 exposure_time = ctk.CTkEntry(frame1,
@@ -113,7 +121,7 @@ temperature = ctk.CTkEntry(frame1,
                             corner_radius=10,
                             width=55)
 temperature.pack(padx=10, expand=1, anchor="nw")
-temperature.place(x=120, y=100)
+temperature.place(x=115, y=100)
 
 temperature_label1 = ctk.CTkLabel(frame1,
                                     text="Temperature:",
@@ -127,28 +135,15 @@ temperature_label2 = ctk.CTkLabel(frame1, text="°C",
 temperature_label2.pack(padx=5, pady=5,expand=1)
 temperature_label2.place(x=177, y=100)
 
-
-test_label1 = ctk.CTkLabel(frame1, text="", font=("Calibri", 14))
-test_label1.pack()
-test_label1.place(x=30, y=200)
-test_label2 = ctk.CTkLabel(frame1, text="", font=("Calibri", 14))
-test_label2.pack()
-test_label2.place(x=30, y=220)
-
-time=0
-temp=0
-
 #submit button
 def submit():
     if exposure_time.get() == "":
         print("No exposure time was set.")
     else:
-        test_label1.configure(text=f"Exposure time is set at {exposure_time.get()} ms")
         print(f"Exposure time is {exposure_time.get()} ms")
     if temperature.get() == "":
         print("No temperature was set.")
     else:
-        test_label2.configure(text=f"Temperature is set at {temperature.get()} °C")
         print(f"Temperature is {temperature.get()} °C")
 
 submit = ctk.CTkButton(frame1,
@@ -158,9 +153,6 @@ submit = ctk.CTkButton(frame1,
                 height=30, width=50)
 submit.pack(padx=10, pady=10, anchor="nw", expand=1)
 submit.place(x=60, y=140)
-
-
-#gain feature
 
 #mount control feature
 def moveNorth():
@@ -178,7 +170,7 @@ north = ctk.CTkButton(frame2,
                 command=moveNorth,
                 height=40, width=40)
 north.pack(padx=10, pady=10, anchor="nw", expand=1)
-north.place(x=700, y=80)
+north.place(x=730, y=50)
 
 south = ctk.CTkButton(frame2,
                 text="S", font=("Helvetica", 18), text_color="white",
@@ -186,7 +178,7 @@ south = ctk.CTkButton(frame2,
                 command=moveSouth,
                 height=40, width=40)
 south.pack(padx=10, pady=10, anchor="nw", expand=1)
-south.place(x=700, y=180)
+south.place(x=730, y=150)
 
 west = ctk.CTkButton(frame2,
                 text="W", font=("Helvetica", 18), text_color="white",
@@ -194,7 +186,7 @@ west = ctk.CTkButton(frame2,
                 command=moveWest,
                 height=40, width=40)
 west.pack(padx=10, pady=10, anchor="nw", expand=1)
-west.place(x=650, y=130)
+west.place(x=680, y=100)
 
 east = ctk.CTkButton(frame2,
                 text="E", font=("Helvetica", 18), text_color="white",
@@ -202,7 +194,7 @@ east = ctk.CTkButton(frame2,
                 command=moveEast,
                 height=40, width=40)
 east.pack(padx=10, pady=10, anchor="nw", expand=1)
-east.place(x=750, y=130)
+east.place(x=780, y=100)
 
 #image saving feature
 def saveImage():
@@ -215,20 +207,7 @@ save_image = ctk.CTkButton(frame2,
                 height=30, width=80,
                 anchor="ne")
 save_image.pack(padx=10, pady=10, anchor="nw", expand=1)
-save_image.place(x=720, y=10)
-
-#live view feature
-def liveView():
-    print("Currently viewing the live feed")
-
-live_view = ctk.CTkButton(frame2,
-                text="Live View", font=("Helvetica", 18), text_color="white",
-                fg_color="black", bg_color="transparent", hover_color="dark grey",
-                command=liveView,
-                height=30, width=80,
-                anchor="ne")
-live_view.pack(padx=10, pady=10, anchor="nw", expand=1)
-live_view.place(x=620, y=10)
+save_image.place(x=356, y=680)
 
 frame1.tkraise()
 #Run app

@@ -2,8 +2,7 @@ import tkinter
 from tkinter import *
 from tkinter import ttk
 from tkinter import PhotoImage
-import subprocess 
-#from tkinter_webcam import webcam
+import subprocess
 import customtkinter as ctk
 from PIL import ImageTk, Image
 import cv2
@@ -33,12 +32,8 @@ bg_image1.place(x=0, y=0)
 frame2 = ctk.CTkFrame(root)
 frame2.pack(fill="both", expand=1)
 frame2.place(x=0, y=0)
-
-#webcam = webcam.Box(frame2, width=1100, height=900)
-#webcam.show_frames()
-
-# bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
-# bg_image2.pack(expand=1)
+bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
+bg_image2.pack(expand=1)
 
 
 #buttons that will switch between pages
@@ -65,8 +60,6 @@ def phd2_command():
         stdout, stderr = process.communicate()
         print("output: ", stdout)
         print("error: ", stderr)
-        
-        
 
 PHD2_button = ctk.CTkButton(frame1,
                         text="PHD2", font=("Helvetica", 18), text_color="white",
@@ -127,9 +120,6 @@ test_label1.place(x=30, y=200)
 test_label2 = ctk.CTkLabel(frame1, text="", font=("Calibri", 14))
 test_label2.pack()
 test_label2.place(x=30, y=220)
-
-time=0
-temp=0
 
 #submit button
 def submit():

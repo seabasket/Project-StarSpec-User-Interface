@@ -39,6 +39,10 @@ bg_image2.pack(expand=1)
 
 def open_phd2():
     print("PHD2 is open.")
+    result = subprocess.Popen(['phd2'], stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = TRUE)
+    stdout, stderr = process.communicate()
+    print("output: ", stdout)
+    print("error: ", stderr)
 
 #PHD2 button
 phd2_button = ctk.CTkButton(frame1,

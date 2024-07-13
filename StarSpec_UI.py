@@ -1,4 +1,5 @@
 import subprocess
+import PyIndi
 # run INDI_init.sh to init INDI server
 INDI_init_path = "./INDI_init.sh"
 INDI_init_command = f"gnome-terminal -- bash -c '{INDI_init_path}; exec bash'"

@@ -1,6 +1,7 @@
 import subprocess
 import PyIndi
-# run INDI_init.sh to init INDI server
+import time
+#run INDI_init.sh to init INDI server
 INDI_init_path = "./INDI_init.sh"
 INDI_init_command = f"gnome-terminal -- bash -c '{INDI_init_path}; exec bash'"
 INDI_init_process = subprocess.Popen(INDI_init_command, shell=True) 
@@ -14,6 +15,63 @@ import customtkinter as ctk
 from PIL import ImageTk, Image
 import cv2
 from cv2 import *
+
+#Indi Client Setup
+class IndiClient(PyIndi.BaseClient):
+    def __init__(self):
+        super(IndiClient, self).__init__()
+        self.device_name = "ZWO CCD ASI294MC Pro"
+        self.device = None
+        self.ccd = None
+    def newDevice(self, d):
+        if d.getDeviceName() == self.device_name:
+                self.device = d
+    def newProperty(self, p):
+        global monitored, cmonitor
+        if(p.getDeviceName() == monitored and p.getName() == "CONNECTION"):
+                cmonitor = p.getSwitch()
+        print(f"New property: {p.getName()} for device {p.getDeviceName()}")
+    def removeProperty(self, p):
+        pass
+    def newBLOB(self, bp):
+        pass
+    def newSwitch(self, svp):
+        pass
+    def newNumber(self, nvp):
+        pass
+    def newText(self, tvp):
+        pass
+    def newLight(self, lvp):
+        pass
+    def newMessage(self, d, m):
+        print(f"New message from {d.getDeviceName()}: {m.message}")
+    def serverConnected(self):
+        print("Server connected.")
+    def serverDisconnected(self, code):
+        print(f"Server disconnected (code {code})")
+        passent.sendNewSwitch(cmonitor) # send this new value to the device
+
+monitored = "ZWO CCD ASI294MC Pro"
+
+#initialization of INDI server
+indiclient=IndiClient()
+indiclient.setServer("localhost",7624)
+for i in range(30):
+        if indiclient.device and indiclient.ccd:
+                break
+        if i == 1:
+                print("Waiting for device & properties...")
+        time.sleep(1)
+
+if not indiclient.connectServer():
+        print("INDI server failed to connect.")
+        exit(1)
+if not indiclient.device is None:
+        print("Device not found.")
+else:
+        print("Device is connected!")
+
+
 
 #system appearance
 ctk.set_appearance_mode("System")
@@ -42,6 +100,19 @@ frame2.pack(fill="both", expand=1)
 frame2.place(x=0, y=0)
 bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
 bg_image2.pack(expand=1)
+
+#terminate code feature
+def terminate():
+        root.destroy()
+        
+terminate_button = ctk.CTkButton(frame1,
+                text="Terminate", font=("Helvetica", 18), text_color="white",
+                command=terminate,
+                fg_color="black", bg_color="black", hover_color="dark grey",
+                height=30, width=80,
+                border_color="white", border_width=2, background_corner_colors=("#653646", "#794c6d", "#b96074", "#b96074"))
+terminate_button.pack(padx=10, pady=10, anchor="nw", expand=1)
+terminate_button.place(x=356, y=680)
 
 def open_phd2():
     print("PHD2 is open.")

@@ -110,7 +110,7 @@ terminate_button = ctk.CTkButton(frame1,
                 command=terminate,
                 fg_color="black", bg_color="black", hover_color="dark grey",
                 height=30, width=80,
-                border_color="white", border_width=2, background_corner_colors=("#653646", "#794c6d", "#b96074", "#b96074"))
+                border_color="white", border_width=2, background_corner_colors=("#653646", "#515062", "#4c3e55", "#b96074"),
 terminate_button.pack(padx=10, pady=10, anchor="nw", expand=1)
 terminate_button.place(x=356, y=680)
 

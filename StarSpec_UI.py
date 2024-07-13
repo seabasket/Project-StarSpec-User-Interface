@@ -20,14 +20,21 @@ from cv2 import *
 class IndiClient(PyIndi.BaseClient):
     def __init__(self):
         super(IndiClient, self).__init__()
-        self.device_name = "ZWO CCD"
+        self.zcamera = "ZWO CCD"
+        self.picamera = "indi_pylibcamera"
         self.device = None
     def newDevice(self, d):
-        if d.getDeviceName() == self.device_name:
+        if d.getDeviceName() == self.zcamera:
+                self.device = d
+        if d.getDeviceName() == self.picamera:
                 self.device = d
     def newProperty(self, p):
         global monitored, cmonitor
-        if(p.getDeviceName() == monitored and p.getName() == "CONNECTION"):
+        if(p.getDeviceName() == "ZWO CCD" and p.getName() == "CONNECTION"):
+                cmonitor = p.getSwitch()
+        print(f"New property: {p.getName()} for device {p.getDeviceName()}")
+        
+        if(p.getDeviceName() == "indi_pylibcamera" and p.getName() == "CONNECTION"):
                 cmonitor = p.getSwitch()
         print(f"New property: {p.getName()} for device {p.getDeviceName()}")
     def removeProperty(self, p):
@@ -57,7 +64,7 @@ for i in range(30):
         if indiclient.device:
                 break
         if i == 1:
-                print("Waiting for device & properties...")
+                print("Waiting for devices & properties...")
         time.sleep(1)
 
 if not indiclient.connectServer():

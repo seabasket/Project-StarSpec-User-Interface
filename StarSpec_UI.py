@@ -20,9 +20,8 @@ from cv2 import *
 class IndiClient(PyIndi.BaseClient):
     def __init__(self):
         super(IndiClient, self).__init__()
-        self.device_name = "ZWO CCD ASI294MC Pro"
+        self.device_name = "ZWO CCD"
         self.device = None
-        self.ccd = None
     def newDevice(self, d):
         if d.getDeviceName() == self.device_name:
                 self.device = d
@@ -51,13 +50,11 @@ class IndiClient(PyIndi.BaseClient):
         print(f"Server disconnected (code {code})")
         passent.sendNewSwitch(cmonitor) # send this new value to the device
 
-monitored = "ZWO CCD ASI294MC Pro"
-
 #initialization of INDI server
 indiclient=IndiClient()
 indiclient.setServer("localhost",7624)
 for i in range(30):
-        if indiclient.device and indiclient.ccd:
+        if indiclient.device:
                 break
         if i == 1:
                 print("Waiting for device & properties...")
@@ -70,8 +67,6 @@ if not indiclient.device is None:
         print("Device not found.")
 else:
         print("Device is connected!")
-
-
 
 #system appearance
 ctk.set_appearance_mode("System")

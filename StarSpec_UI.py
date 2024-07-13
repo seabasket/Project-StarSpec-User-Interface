@@ -119,7 +119,6 @@ terminate_button.place(x=356, y=680)
 def open_phd2():
     print("PHD2 is open.")
     result = subprocess.Popen(['phd2'], stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = TRUE)
-    stdout, stderr = process.communicate()
     print("output: ", stdout)
     print("error: ", stderr)
     

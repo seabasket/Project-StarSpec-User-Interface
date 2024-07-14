@@ -87,7 +87,7 @@ root.title("StarSpec UI")
 
 #define background
 image = Image.open("Space_Image.jpg")
-bg = ImageTk.PhotoImage(image)
+bg = ctk.CTkImage(dark_image=image, size=(840, 720))
 
 #create 1st frame (main controls)
 frame1 = ctk.CTkFrame(root)

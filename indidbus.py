@@ -183,17 +183,17 @@ def close():
 gain_label = ctk.CTkLabel(frame1,
                             text="Gain:", font=("Helvetica", 18), text_color="white",
                             fg_color="black",  bg_color="black",
-                            height=30, width=50,
                             corner_radius=10)
 gain_label.pack(anchor="nw", expand=1)
-gain_label.place(x=10, y=10)
+gain_label.place(x=10, y=15)
 
 gain_text = ctk.CTkTextbox(frame1,
                             font=("Helvetica", 18),
                             fg_color="white", bg_color="black", text_color="black",
-                            height=30, width=50
+                            height=20, width=50,
+                            activate_scrollbars="False"
                             )
-gain_text.pack(padx=10, pady=10, anchor="nw", expand=1)
+gain_text.pack(anchor="nw", expand=1)
 gain_text.place(x=65, y=10)
 
 # IN CASE WE WANT TO USE A SLIDER FOR GAIN
@@ -217,15 +217,16 @@ exposure_time_label = ctk.CTkLabel(frame1,
                                     height=30, width=50,
                                     corner_radius=10)
 exposure_time_label.pack(anchor="nw", expand=1)
-exposure_time_label.place(x=10, y=60)
+exposure_time_label.place(x=10, y=55)
 
 exposure_time_text = ctk.CTkTextbox(frame1,
                                     font=("Helvetica", 18),
                                     fg_color="white", bg_color="black", text_color="black",
-                                    height=30, width=50
+                                    height=20, width=50,
+                                    activate_scrollbars="False"
                                     )
-exposure_time_text.pack(padx=10, pady=10, anchor="nw", expand=1)
-exposure_time_text.place(x=150, y=60)  
+exposure_time_text.pack(anchor="nw", expand=1)
+exposure_time_text.place(x=150, y=50)  
 
 def submit():
     gain = gain_text.get("1.0", "end-1c")
@@ -259,7 +260,7 @@ submit_button = ctk.CTkButton(frame1,
                                 corner_radius=10,
                                 border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 submit_button.pack(padx=10, pady=10, anchor="nw", expand=1)
-submit_button.place(x=100, y=100)
+submit_button.place(x=50, y=100)
         
 first_close_button = ctk.CTkButton(frame1,
                                     text="Close", font=("Helvetica", 18), text_color="white",

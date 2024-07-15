@@ -175,7 +175,7 @@ frame2.place(x=0, y=0)
 bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
 bg_image2.pack(expand=1)
 
-#terminate code feature
+#terminate user interface
 def close():
     root.destroy()
 
@@ -195,6 +195,20 @@ gain_text = ctk.CTkTextbox(frame1,
                             )
 gain_text.pack(padx=10, pady=10, anchor="nw", expand=1)
 gain_text.place(x=65, y=10)
+
+# IN CASE WE WANT TO USE A SLIDER FOR GAIN
+# gain_value = tk.DoubleVar()
+
+# gain_slider = ctk.CTkSlider(frame1,
+#                             orientation="horizontal",
+#                             from_=50, to=450,
+#                             button_length=10,
+#                             variable=gain_value,
+#                             command=submit,
+#                             button_color="white", button_hover_color="grey", fg_color="white", bg_color="black", progress_color="white")
+# gain_slider.set(50)
+# gain_slider.pack(anchor="nw", expand=1)
+# gain_slider.place(x=230, y=20)
 
 #set exposure time
 exposure_time_label = ctk.CTkLabel(frame1,
@@ -245,7 +259,7 @@ submit_button = ctk.CTkButton(frame1,
                                 corner_radius=10,
                                 border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 submit_button.pack(padx=10, pady=10, anchor="nw", expand=1)
-submit_button.place(x=200, y=100)
+submit_button.place(x=100, y=100)
         
 first_close_button = ctk.CTkButton(frame1,
                                     text="Close", font=("Helvetica", 18), text_color="white",

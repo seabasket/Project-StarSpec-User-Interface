@@ -4,13 +4,13 @@ import time
 KSTARS_init_path = "./KSTARS_init.sh"
 KSTARS_init_command = f"gnome-terminal -- bash -c '{KSTARS_init_path}; exec bash'"
 KSTARS_init_process = subprocess.Popen(KSTARS_init_command, shell=True)
-time.sleep(3)
+time.sleep(5)
 
 #run INDI_init.sh to init INDI server
 INDI_init_path = "./INDI_init.sh"
 INDI_init_command = f"gnome-terminal -- bash -c '{INDI_init_path}; exec bash'"
 INDI_init_process = subprocess.Popen(INDI_init_command, shell=True)
-time.sleep(3)
+time.sleep(5)
 
 import os
 from gi.repository import GObject as gobject
@@ -97,10 +97,6 @@ iface.sendProperty(ZWOcam, "CCD_COOLER")
 iface.setText(ZWOcam, "CCD_TEMPERATURE", "CCD_TEMPERATURE_VALUE", "13.00")
 iface.sendProperty(ZWOcam, "CCD_TEMPERATURE")
 
-#set gain
-iface.setText(ZWOcam, "CCD_CONTROLS", "Gain", "250.000")
-iface.sendProperty(ZWOcam, "CCD_CONTROLS")
-
 #set up images for local storage
 iface.setSwitch(ZWOcam, "UPLOAD_MODE", "UPLOAD_LOCAL", "On")
 iface.sendProperty(ZWOcam, "UPLOAD_MODE")
@@ -175,6 +171,13 @@ frame2.place(x=0, y=0)
 bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
 bg_image2.pack(expand=1)
 
+#create 3rd frame (mount controls/live view)
+frame2 = ctk.CTkFrame(root)
+frame2.pack(fill="both", expand=1)
+frame2.place(x=0, y=0)
+bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
+bg_image2.pack(expand=1)
+
 #terminate user interface
 def close():
     root.destroy()
@@ -194,7 +197,7 @@ gain_text = ctk.CTkTextbox(frame1,
                             activate_scrollbars="False"
                             )
 gain_text.pack(anchor="nw", expand=1)
-gain_text.place(x=65, y=10)
+gain_text.place(x=180, y=10)
 
 # IN CASE WE WANT TO USE A SLIDER FOR GAIN
 # gain_value = tk.DoubleVar()
@@ -212,12 +215,12 @@ gain_text.place(x=65, y=10)
 
 #set exposure time
 exposure_time_label = ctk.CTkLabel(frame1,
-                                    text="Exposure Time:", font=("Helvetica", 18), text_color="white",
+                                    text="Exposure Time (s):", font=("Helvetica", 18), text_color="white",
                                     fg_color="black",  bg_color="black",
                                     height=30, width=50,
                                     corner_radius=10)
 exposure_time_label.pack(anchor="nw", expand=1)
-exposure_time_label.place(x=10, y=55)
+exposure_time_label.place(x=10, y=45)
 
 exposure_time_text = ctk.CTkTextbox(frame1,
                                     font=("Helvetica", 18),
@@ -226,17 +229,40 @@ exposure_time_text = ctk.CTkTextbox(frame1,
                                     activate_scrollbars="False"
                                     )
 exposure_time_text.pack(anchor="nw", expand=1)
-exposure_time_text.place(x=150, y=50)  
+exposure_time_text.place(x=180, y=50)
+
+#set temperature
+temperature_label = ctk.CTkLabel(frame1,
+                                    text="Temperature (°C):", font=("Helvetica", 18), text_color="white",
+                                    fg_color="black",  bg_color="black",
+                                    height=30, width=50,
+                                    corner_radius=10)
+temperature_label.pack(anchor="nw", expand=1)
+temperature_label.place(x=10, y=75)
+
+temperature_text = ctk.CTkTextbox(frame1,
+                                    font=("Helvetica", 18),
+                                    fg_color="white", bg_color="black", text_color="black",
+                                    height=20, width=50,
+                                    activate_scrollbars="False"
+                                    )
+temperature_text.pack(anchor="nw", expand=1)
+temperature_text.place(x=180, y=80)
 
 def submit():
+    print("/n")
     gain = gain_text.get("1.0", "end-1c")
     exposure_time = exposure_time_text.get("1.0", "end-1c")
+    temperature = temperature_text.get("1.0", "end-1c")
 
     if not gain.strip():  #check if the content is empty or contains only whitespace
         gain_value = 0
     else:
         try:
             gain_value = int(gain)
+            #set gain
+            iface.setNumber(ZWOcam, "CCD_CONTROLS", "Gain", gain_value)
+            iface.sendProperty(ZWOcam, "CCD_CONTROLS")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid gain")
             return
@@ -247,10 +273,24 @@ def submit():
     else:
         try:
             exposure_time_value = int(exposure_time)
+            iface.setNumber(ZWOcam, "CCD_EXPOSURE", "CCD_EXPOSURE_VALUE", exposure_time_value)
+            iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid exposure time")
             return
     print(f"Exposure time is set at {exposure_time_value} seconds")
+    
+    if not temperature.strip():  #check if the content is empty or contains only whitespace
+        temperature_value = 0
+    else:
+        try:
+            temperature_value = int(temperature)
+            iface.setNumber(ZWOcam, "CCD_TEMPERATURE", "CCD_TEMPERATURE_VALUE", temperature_value)
+            iface.sendProperty(ZWOcam, "CCD_TEMPERATURE")
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter a valid temperature")
+            return
+    print(f"Temperature is set at {temperature_value} °C")
 
 submit_button = ctk.CTkButton(frame1,
                                 text="Submit", font=("Helvetica", 18), text_color="white",

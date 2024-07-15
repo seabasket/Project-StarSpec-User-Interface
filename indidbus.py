@@ -19,6 +19,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import PhotoImage
 from tkinter import filedialog
+from tkinter import messagebox
 import customtkinter as ctk
 from PIL import ImageTk, Image
 import cv2
@@ -175,34 +176,112 @@ bg_image2 = ctk.CTkLabel(frame2, image=bg, text="")
 bg_image2.pack(expand=1)
 
 #terminate code feature
-def terminate():
-        root.destroy()
+def close():
+    root.destroy()
+
+#set gain
+gain_label = ctk.CTkLabel(frame1,
+                            text="Gain:", font=("Helvetica", 18), text_color="white",
+                            fg_color="black",  bg_color="black",
+                            height=30, width=50,
+                            corner_radius=10)
+gain_label.pack(anchor="nw", expand=1)
+gain_label.place(x=10, y=10)
+
+gain_text = ctk.CTkTextbox(frame1,
+                            font=("Helvetica", 18),
+                            fg_color="white", bg_color="black", text_color="black",
+                            height=30, width=50
+                            )
+gain_text.pack(padx=10, pady=10, anchor="nw", expand=1)
+gain_text.place(x=65, y=10)
+
+#set exposure time
+exposure_time_label = ctk.CTkLabel(frame1,
+                                    text="Exposure Time:", font=("Helvetica", 18), text_color="white",
+                                    fg_color="black",  bg_color="black",
+                                    height=30, width=50,
+                                    corner_radius=10)
+exposure_time_label.pack(anchor="nw", expand=1)
+exposure_time_label.place(x=10, y=60)
+
+exposure_time_text = ctk.CTkTextbox(frame1,
+                                    font=("Helvetica", 18),
+                                    fg_color="white", bg_color="black", text_color="black",
+                                    height=30, width=50
+                                    )
+exposure_time_text.pack(padx=10, pady=10, anchor="nw", expand=1)
+exposure_time_text.place(x=150, y=60)  
+
+def submit():
+    gain = gain_text.get("1.0", "end-1c")
+    exposure_time = exposure_time_text.get("1.0", "end-1c")
+
+    if not gain.strip():  #check if the content is empty or contains only whitespace
+        gain_value = 0
+    else:
+        try:
+            gain_value = int(gain)
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter a valid gain")
+            return
+    print(f"Gain is set at {gain_value}")
+
+    if not exposure_time.strip():  #check if the content is empty or contains only whitespace
+        exposure_time_value = 0
+    else:
+        try:
+            exposure_time_value = int(exposure_time)
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter a valid exposure time")
+            return
+    print(f"Exposure time is set at {exposure_time_value} seconds")
+
+submit_button = ctk.CTkButton(frame1,
+                                text="Submit", font=("Helvetica", 18), text_color="white",
+                                command=submit,
+                                fg_color="black", bg_color="black", hover_color="dark grey",
+                                height=30, width=60,
+                                corner_radius=10,
+                                border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
+submit_button.pack(padx=10, pady=10, anchor="nw", expand=1)
+submit_button.place(x=200, y=100)
         
-terminate_button = ctk.CTkButton(frame1,
-                text="Terminate", font=("Helvetica", 18), text_color="white",
-                command=terminate,
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=30, width=80,
-                border_color="white", border_width=2, background_corner_colors=("#653646", "#515062", "#4c3e55", "#b96074"))
-terminate_button.pack(padx=10, pady=10, anchor="nw", expand=1)
-terminate_button.place(x=356, y=680)
+first_close_button = ctk.CTkButton(frame1,
+                                    text="Close", font=("Helvetica", 18), text_color="white",
+                                    command=close,
+                                    fg_color="black", bg_color="black", hover_color="dark grey",
+                                    height=30, width=60,
+                                    corner_radius=10,
+                                    border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
+first_close_button.pack(padx=10, pady=10, anchor="nw", expand=1)
+first_close_button.place(x=770, y=680)
+
+second_close_button = ctk.CTkButton(frame2,
+                                    text="Close", font=("Helvetica", 18), text_color="white",
+                                    command=close,
+                                    fg_color="black", bg_color="black", hover_color="dark grey",
+                                    height=30, width=60,
+                                    corner_radius=10,
+                                    border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
+second_close_button.pack(padx=10, pady=10, anchor="nw", expand=1)
+second_close_button.place(x=770, y=680)
 
 def open_phd2():
     print("PHD2 is open.")
     result = subprocess.Popen(['phd2'], stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = TRUE)
     print("output: ", stdout)
     print("error: ", stderr)
-    
 
 #PHD2 button
 phd2_button = ctk.CTkButton(frame1,
-                        text="Open PHD2", font=("Helvetica", 18), text_color="white",
-                        command=open_phd2,
-                        fg_color="black", bg_color="black", hover_color="dark grey",
-                        width=50,
-                        anchor="nw",
-                        corner_radius=10,
-                        border_color="white", border_width=2, background_corner_colors=("#27262e", "#27262e", "#27262e", "#27262e"))
+                            text="Open PHD2", font=("Helvetica", 18), text_color="white",
+                            command=lambda:open_phd2,
+                            fg_color="black", bg_color="black", hover_color="dark grey",
+                            width=50,
+                            anchor="nw",
+                            corner_radius=10,
+                            border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 phd2_button.pack(expand=1)
 phd2_button.place(x=600, y=10)
 
@@ -214,7 +293,7 @@ switch1 = ctk.CTkButton(frame1,
                         width=50,
                         anchor="nw",
                         corner_radius=10,
-                        border_color="white", border_width=2, background_corner_colors=("#27262e", "#27262e", "#27262e", "#27262e"))
+                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 switch1.pack(expand=1)
 switch1.place(x=730, y=10)
 
@@ -240,63 +319,62 @@ def moveEast():
     print("Mount moved east")
 
 north = ctk.CTkButton(frame2,
-                text="N", font=("Helvetica", 18), text_color="white",
-                command=moveNorth,
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=40, width=40,
-                corner_radius=10,
-                border_color="white", border_width=2, background_corner_colors=("#27262e", "#27262e", "#27262e", "#27262e"))
+                        text="N", font=("Helvetica", 18), text_color="white",
+                        command=lambda:moveNorth,
+                        fg_color="black", bg_color="black", hover_color="dark grey",
+                        height=40, width=40,
+                        corner_radius=10,
+                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 north.pack(padx=10, pady=10, anchor="nw", expand=1)
 north.place(x=730, y=50)
 
 south = ctk.CTkButton(frame2,
-                text="S", font=("Helvetica", 18), text_color="white",
-                command=moveSouth,
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=40, width=40,
-                corner_radius=10,
-                border_color="white", border_width=2, background_corner_colors=("#27262e", "#27262e", "#27262e", "#27262e"))
+                        text="S", font=("Helvetica", 18), text_color="white",
+                        command=lambda:moveSouth,
+                        fg_color="black", bg_color="black", hover_color="dark grey",
+                        height=40, width=40,
+                        corner_radius=10,
+                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 south.pack(padx=10, pady=10, anchor="nw", expand=1)
 south.place(x=730, y=150)
 
 west = ctk.CTkButton(frame2,
-                text="W", font=("Helvetica", 18), text_color="white",
-                command=moveWest,
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=40, width=40,
-                corner_radius=10,
-                border_color="white", border_width=2, background_corner_colors=("#27262e", "#27262e", "#27262e", "#27262e"))
+                        text="W", font=("Helvetica", 18), text_color="white",
+                        command=lambda:moveWest,
+                        fg_color="black", bg_color="black", hover_color="dark grey",
+                        height=40, width=40,
+                        corner_radius=10,
+                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 west.pack(padx=10, pady=10, anchor="nw", expand=1)
 west.place(x=680, y=100)
 
 east = ctk.CTkButton(frame2,
-                text="E", font=("Helvetica", 18), text_color="white",
-                command=moveEast,
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=40, width=40,
-                corner_radius=10,
-                border_color="white", border_width=2, background_corner_colors=("#27262e", "#27262e", "#27262e", "#27262e"))
+                        text="E", font=("Helvetica", 18), text_color="white",
+                        command=lambda:moveEast,
+                        fg_color="black", bg_color="black", hover_color="dark grey",
+                        height=40, width=40,
+                        corner_radius=10,
+                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 east.pack(padx=10, pady=10, anchor="nw", expand=1)
 east.place(x=780, y=100)
 
-
 caputure_ZWO_image = ctk.CTkButton(frame2,
-                text="Capture ZWO Image", font=("Helvetica", 18), text_color="white",
-                command=lambda:takeZWOPicture(5),
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=30, width=80,
-                border_color="white", border_width=2, background_corner_colors=("#653646", "#794c6d", "#b96074", "#b96074"))
+                                    text="Capture ZWO Image", font=("Helvetica", 18), text_color="white",
+                                    command=lambda:takeZWOPicture(5),
+                                    fg_color="black", bg_color="black", hover_color="dark grey",
+                                    height=30, width=80,
+                                    border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 caputure_ZWO_image.pack(padx=10, pady=10, anchor="nw", expand=1)
-caputure_ZWO_image.place(x=416, y=680)
+caputure_ZWO_image.place(x=420, y=680)
 
 caputure_PI_image = ctk.CTkButton(frame2,
-                text="Capture PI Image", font=("Helvetica", 18), text_color="white",
-                command=lambda:takePIPicture(5),
-                fg_color="black", bg_color="black", hover_color="dark grey",
-                height=30, width=80,
-                border_color="white", border_width=2, background_corner_colors=("#653646", "#794c6d", "#b96074", "#b96074"))
+                                    text="Capture PI Image", font=("Helvetica", 18), text_color="white",
+                                    command=lambda:takePIPicture(5),
+                                    fg_color="black", bg_color="black", hover_color="dark grey",
+                                    height=30, width=80,
+                                    border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
 caputure_PI_image.pack(padx=10, pady=10, anchor="nw", expand=1)
-caputure_PI_image.place(x=296, y=680)
+caputure_PI_image.place(x=260, y=680)
 
 frame1.tkraise()
 #Run app

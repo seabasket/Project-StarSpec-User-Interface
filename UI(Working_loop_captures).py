@@ -6,14 +6,14 @@ KSTARS_init_path = "./KSTARS_init.sh"
 KSTARS_init_command = f"gnome-terminal -- bash -c '{KSTARS_init_path}; exec bash'"
 KSTARS_init_process = subprocess.Popen(KSTARS_init_command, shell=True)
 print("Initializing KSTARS...")
-time.sleep(5)
+time.sleep(6)
 
 #run INDI_init.sh to initizlize INDI server
 INDI_init_path = "./INDI_init.sh"
 INDI_init_command = f"gnome-terminal -- bash -c '{INDI_init_path}; exec bash'"
 INDI_init_process = subprocess.Popen(INDI_init_command, shell=True)
 print("Initializing INDI Server...")
-time.sleep(5)
+time.sleep(6)
 
 import os
 from gi.repository import GObject as gobject
@@ -45,8 +45,8 @@ def ZWOLiveThreadFunc():
             #display image
             test_image = Image.open("/home/starspec/STSC/STSCvenv/UI/LIVE/ZWO/ZLIVE.fits")
             Z_live_test = ctk.CTkImage(dark_image=test_image, size=(470, 315))
-            label = ctk.CTkLabel(live_loop_frame, text="Z Cam", image=Z_live_test)
-            label.place(x=20, y=20) 
+            label = ctk.CTkLabel(live_loop_frame, text="", image=Z_live_test)
+            label.place(x=100, y=60) 
             time.sleep(exptime)
         time.sleep(1)
     
@@ -64,8 +64,8 @@ def PILiveThreadFunc():
             #display image
             test_image = Image.open("/home/starspec/STSC/STSCvenv/UI/LIVE/PI/PILIVE.fits")
             Z_live_test = ctk.CTkImage(dark_image=test_image, size=(470, 315))
-            label = ctk.CTkLabel(live_loop_frame, text="PI Cam", image=Z_live_test)
-            label.place(x=20, y=350) 
+            label = ctk.CTkLabel(live_loop_frame, text="", image=Z_live_test)
+            label.place(x=100, y=380) 
             time.sleep(exptime)
         time.sleep(1)
 
@@ -160,7 +160,7 @@ def submitZWOsettings():
         try:
             exposure_time_value = int(exposure_time)
             iface.setNumber(ZWOcam, "CCD_EXPOSURE", "CCD_EXPOSURE_VALUE", exposure_time_value)
-            iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
+            #iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid exposure time")
             return
@@ -176,7 +176,7 @@ def submitZWOsettings():
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid temperature")
             return
-    print(f"Temperature is set at {temperature_value} °C")
+    print(f"Temperature is set at {temperature_value} Â°C")
 
 #submit the PI settings to the INDI server
 def submitPIsettings():
@@ -202,7 +202,7 @@ def submitPIsettings():
         try:
             exposure_time_value = int(exposure_time)
             iface.setNumber(PIcam, "CCD_EXPOSURE", "CCD_EXPOSURE_VALUE", exposure_time_value)
-            iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
+            #iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid exposure time")
             return
@@ -300,6 +300,24 @@ while True:
         break
 
 print("Connection to Telescope and CCD is established.")
+
+#prints out all properties of each device
+'''
+ZWOProps = iface.getProperties(ZWOcam)
+PIProps = iface.getProperties(PIcam)
+MOUNTProps = iface.getProperties(Mount)
+print(f"\nvvv ZWO PROPERTIES vvv")
+for ZWOProp in ZWOProps:
+    print(ZWOProp)
+    
+print(f"\nvvv PI PROPERTIES vvv")
+for PIProp in PIProps:
+    print(PIProp)
+    
+print(f"\nvvv MOUNT PROPERTIES vvv")
+for MountProp in MOUNTProps:
+    print(MountProp)
+'''
 
 #set cooling & temp in ZWO camera
 iface.setSwitch(ZWOcam, "CCD_COOLER", "COOLER_ON", "On")

@@ -1,7 +1,6 @@
 import subprocess
 import time
 
-
 import os
 import tkinter
 from tkinter import *
@@ -170,7 +169,7 @@ north = ctk.CTkButton(live_loop_frame,
                         fg_color="black", bg_color="black", hover_color="dark grey",
                         height=32, width=32,
                         corner_radius=10,
-                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
+                        border_color="white", border_width=2, background_corner_colors=("#3f2930", "black", "#141b1c", "#2d2d34"))
 north.pack(padx=10, pady=10, anchor="nw", expand=1)
 north.place(x=730, y=294)
 
@@ -190,7 +189,7 @@ west = ctk.CTkButton(live_loop_frame,
                         fg_color="black", bg_color="black", hover_color="dark grey",
                         height=32, width=32,
                         corner_radius=10,
-                        border_color="white", border_width=2, background_corner_colors=("black", "black", "black", "black"))
+                        border_color="white", border_width=2, background_corner_colors=("black", "#624146", "#703d41", "black"))
 west.pack(padx=10, pady=10, anchor="nw", expand=1)
 west.place(x=680, y=344)
 

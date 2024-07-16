@@ -161,7 +161,7 @@ def submitZWOsettings():
         try:
             exposure_time_value = int(exposure_time)
             iface.setNumber(ZWOcam, "CCD_EXPOSURE", "CCD_EXPOSURE_VALUE", exposure_time_value)
-            #iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
+            iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid exposure time")
             return
@@ -203,7 +203,7 @@ def submitPIsettings():
         try:
             exposure_time_value = int(exposure_time)
             iface.setNumber(PIcam, "CCD_EXPOSURE", "CCD_EXPOSURE_VALUE", exposure_time_value)
-            #iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
+            iface.sendProperty(ZWOcam, "CCD_EXPOSURE")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid exposure time")
             return
